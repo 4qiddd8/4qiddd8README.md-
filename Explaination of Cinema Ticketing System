@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+ 
+struct Node {           // representing a node in the linked list // 
+    int seat_number;    // each node contains int to store seat numbers //
+    Node* next;         // pointer next points to the next linked list //
+};
+ 
+class LinkedList {      //declare class called linked list //
+private:            
+    Node* head;     // member head is a pointer to first node //
+ 
+public:
+    LinkedList() : head(nullptr) {} // consturctor initializes head to nullptr when new obj created //
+ 
+    bool is_empty() {       // checks if linked list is empty by checking heas is nullptr //
+        return head == nullptr;     // return turn if linked list empty, false is booked //
+    }
+ 
+    void append(int seat_number) {  // appends new node to the end of linked list //
+        Node* new_node = new Node;  // creates new node obj using new keyword // 
+        new_node->seat_number = seat_number;    // seat number is assign to the new field of seat number //
+        new_node->next = nullptr;   // next is set to nullptr // 
+ 
+        if (is_empty()) {   // to check if seat is empty or booked //
+            head = new_node; // head is set to new node //
+        } else {
+            Node* current = head;   
+            while (current->next) {
+                current = current->next;
+            }
+            current->next = new_node;
+        }
+    }
+ 
+    void display() {       // display current seat status after traversing //
+        if (is_empty()) {
+            cout << "No seats booked." << endl; // printing booked seat number //
+        } else {
+            Node* current = head;   // traverses using a loop to print each seat number //
+            while (current) {
+                cout << "Seat " << current->seat_number << " "; 
+                current = current->next; // 
+            }
+            cout << endl;
+        }
+    }
+ 
+    void book_seat(int seat_number) {   
+        if (is_empty()) {
+            cout << "No seats available." << endl; // allows users to book seat by seat number as input //
+        } else {
+            Node* current = head; 
+            Node* prev = nullptr;
+            while (current) {      // traverses using loop checking if seat number matches //
+                if (current->seat_number == seat_number) { 
+                    if (current == head) {
+                        head = current->next;
+                    } else {
+                        prev->next = current->next;
+                    }
+                    cout << "Seat " << seat_number << " booked." << endl;   // Output : if sucessful booking is, if no seats print not found //
+                    delete current;     // memory for the removed node is deallocated // 
+                    return;
+                }
+                prev = current;
+                current = current->next;
+            }
+            cout << "Seat " << seat_number << " not found." << endl;
+        }
+    }
+};
+ 
+int main() {
+    LinkedList seats;
+    // Loop through the seats
+    for(int seat_number=1; seat_number<=50; seat_number++) 
+    {
+      seats.append(seat_number);
+    }
+    cout << "Available seats:" << endl;
+    seats.display();  // Output: Seats //
+ 
+    int seat_to_book;
+    cout << "\nEnter the seat number you want to book: ";
+    cin >> seat_to_book;
+ 
+    seats.book_seat(seat_to_book);
+ 
+    cout << "\nSeats left:" << endl;
+    seats.display();  // Output: Updated seat status after booking //
+ 
+    return 0;
+}
